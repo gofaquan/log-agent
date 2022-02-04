@@ -1,7 +1,6 @@
 package kafka
 
 import (
-	"fmt"
 	"github.com/Shopify/sarama"
 	"github.com/sirupsen/logrus"
 )
@@ -15,7 +14,6 @@ func Init(address []string, chanSize int64) (err error) {
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
-	fmt.Println(address)
 
 	//2. 连接 kafka
 	client, err = sarama.NewSyncProducer(address, config)

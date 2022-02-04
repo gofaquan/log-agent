@@ -4,16 +4,22 @@ import (
 	"fmt"
 	"github.com/go-ini/ini"
 	"github.com/gofaquan/kafka"
+	"github.com/gofaquan/tail"
 	"github.com/sirupsen/logrus"
 )
 
 type config struct {
 	KafkaConfig `ini:"kafka"`
+	TaiLConfig  `ini:"tail"`
 }
 
 type KafkaConfig struct {
 	Address  string `ini:"address"`
 	ChanSize int64  `ini:"chan_size"`
+}
+
+type TaiLConfig struct {
+	Filepath string `ini:"file_path"`
 }
 
 func main() {
@@ -35,5 +41,13 @@ func main() {
 		return
 	}
 	fmt.Println("init kafka success !")
+
+	//3. 根据配置中的日志路径初始化tail
+	err = tail.Init(configObj.TaiLConfig.Filepath)
+	if err != nil {
+		logrus.Error("init tail failed, err:", err)
+		return
+	}
+	fmt.Println("init tail success !")
 
 }
