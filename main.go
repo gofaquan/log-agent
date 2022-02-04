@@ -20,6 +20,7 @@ type KafkaConfig struct {
 
 type TaiLConfig struct {
 	Filepath string `ini:"file_path"`
+	Topic    string `ini:"topic"`
 }
 
 func main() {
@@ -31,8 +32,6 @@ func main() {
 		return
 	}
 	fmt.Println(".ini file load success !")
-
-	fmt.Println(configObj.KafkaConfig.Address)
 
 	//2. 初始化 kafka 连接
 	err = kafka.Init([]string{configObj.KafkaConfig.Address}, configObj.KafkaConfig.ChanSize)
@@ -50,4 +49,9 @@ func main() {
 	}
 	fmt.Println("init tail success !")
 
+	err = kafka.Run(configObj.TaiLConfig.Topic)
+	if err != nil {
+		logrus.Error("获取 topic 出错:", err)
+		return
+	}
 }
